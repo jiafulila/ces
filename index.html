@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>检测报告 - 极简主义版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --brand-blue: #0068b7;
+            --black: #111111;
+            --gray: #888888;
+            --light-gray: #f2f2f2;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: var(--black);
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* 布局容器：左固定，右滚动 */
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- 左侧：信息固定区 --- */
+        .info-sidebar {
+            width: 40%;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid var(--border-color);
+            background: #fff;
+            z-index: 10;
+        }
+
+        .brand-area {
+            margin-bottom: 60px;
+        }
+
+        .brand-tag {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--brand-blue);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .sub-title {
+            font-size: 18px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        /* 数据矩阵 */
+        .data-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: auto;
+            margin-bottom: 60px;
+        }
+
+        .data-item {
+            border-top: 2px solid var(--black);
+            padding-top: 15px;
+        }
+
+        .data-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .data-value.highlight {
+            color: var(--brand-blue);
+        }
+
+        .footer-info {
+            font-size: 12px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- 右侧：视觉流区域 --- */
+        .visual-content {
+            width: 60%;
+            background-color: #f9f9f9;
+        }
+
+        .report-block {
+            border-bottom: 1px solid var(--border-color);
+            padding: 80px 60px;
+            transition: background 0.3s;
+        }
+
+        .report-block:hover {
+            background-color: #fff;
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .block-index {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--brand-blue);
+        }
+
+        .block-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .img-frame {
+            width: 100%;
+            height: auto;
+            min-height: 500px;
+            background-color: #eeeeee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* 图片交互效果 */
+        .img-frame img {
+            width: 80%;
+            height: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .report-block:hover .img-frame img {
+            transform: scale(1.02) translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 104, 183, 0.15);
+        }
+
+        .placeholder-text {
+            color: var(--gray);
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .btn-download {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .btn-download:hover {
+            color: var(--brand-blue);
+            border-bottom-color: var(--brand-blue);
+        }
+
+        /* 装饰性元素 */
+        .decorative-line {
+            position: fixed;
+            right: 40px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: var(--border-color);
+            z-index: 5;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            .info-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 40px;
+            }
+            .visual-content {
+                width: 100%;
+            }
+            .decorative-line {
+                display: none;
+            }
+            .main-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="decorative-line"></div>
+
+    <div class="layout-container">
+        
+        <aside class="info-sidebar">
+            <div>
+                <div class="brand-area">
+                    <span class="brand-tag">/// SMART INSPECTION SYSTEM</span>
+                    <h1 class="main-title">三峡水利<br>智慧展示馆</h1>
+                    <p class="sub-title">材料入场检测数字化报告</p>
+                </div>
+
+                <div class="data-matrix">
+                    <div class="data-item">
+                        <div class="data-label"> 材料名称
+</div>
+                        <div class="data-value highlight">蒸压灰砂砖</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">产品规格</div>
+                        <div class="data-value">200×100×50</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label"> 进场日期</div>
+                        <div class="data-value">2025.12.09</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Report ID</div>
+                        <div class="data-value" style="font-size: 16px; font-family: monospace;">#JC-20251209</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-info">
+                <i class="fas fa-shield-alt" style="color: var(--brand-blue)"></i>
+                <span>区块链存证已同步 · 仅对本次送检负责</span>
+            </div>
+        </aside>
+
+        <main class="visual-content">
+            
+            <article class="report-block">
+                <div class="block-header">
+                    <h2 class="block-title">厂家合格证</h2>
+                    <span class="block-index">01</span>
+                </div>
+                <div class="img-frame" onclick="this.querySelector('input').click()">
+                    <div class="placeholder-text">
+                        <i class="fas fa-certificate fa-2x" style="margin-bottom:15px; color:#ddd;"></i><br>
+                        Certificate of Conformity
+                    </div>
+                    <input type="file" style="display:none" onchange="previewImage(this)">
+                </div>
+                <a href="#" class="btn-download"><i class="fas fa-arrow-down" style="margin-right:8px;"></i> 下载原件</a>
+            </article>
+
+            <article class="report-block">
+                <div class="block-header">
+                    <h2 class="block-title">初检报告</h2>
+                    <span class="block-index">02</span>
+                </div>
+                <div class="img-frame" onclick="this.querySelector('input').click()">
+                    <div class="placeholder-text">
+                        <i class="fas fa-file-alt fa-2x" style="margin-bottom:15px; color:#ddd;"></i><br>
+                        Initial Inspection Report
+                    </div>
+                    <input type="file" style="display:none" onchange="previewImage(this)">
+                </div>
+                <a href="#" class="btn-download"><i class="fas fa-arrow-down" style="margin-right:8px;"></i> 下载原件</a>
+            </article>
+
+            <article class="report-block">
+                <div class="block-header">
+                    <h2 class="block-title">复检报告</h2>
+                    <span class="block-index">03</span>
+                </div>
+                <div class="img-frame" onclick="this.querySelector('input').click()">
+                    <div class="placeholder-text">
+                        <i class="fas fa-clipboard-check fa-2x" style="margin-bottom:15px; color:#ddd;"></i><br>
+                        Re-inspection Report
+                    </div>
+                    <input type="file" style="display:none" onchange="previewImage(this)">
+                </div>
+                <a href="#" class="btn-download"><i class="fas fa-arrow-down" style="margin-right:8px;"></i> 下载原件</a>
+            </article>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的图片预览脚本，增加交互感
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    // 创建一个img标签
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    
+                    // 清空父容器并添加img
+                    const parent = input.parentElement;
+                    parent.innerHTML = '';
+                    parent.appendChild(img);
+                    parent.appendChild(input); // 保持input在DOM中以便再次点击
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
